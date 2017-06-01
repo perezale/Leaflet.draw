@@ -198,7 +198,9 @@ L.Edit.PolyVerticesEdit = L.Handler.extend({
 			markerLeft = this._markers[j];
 			markerRight = this._markers[i];
 
-			this._createMiddleMarker(markerLeft, markerRight);
+			if(this.options.allowPolyline){
+				this._createMiddleMarker(markerLeft, markerRight);
+			}
 			this._updatePrevNext(markerLeft, markerRight);
 		}
 	},
@@ -341,10 +343,9 @@ L.Edit.PolyVerticesEdit = L.Handler.extend({
 			this._markerGroup.removeLayer(marker._middleRight);
 		}
 
-		// create a ghost marker in place of the removed one
-		if (marker._prev && marker._next) {
+		// create a ghost marker in place of the removed one		
+		if (marker._prev && marker._next && this.options.allowPolyline) {
 			this._createMiddleMarker(marker._prev, marker._next);
-
 		} else if (!marker._prev) {
 			marker._next._middleLeft = null;
 
@@ -423,8 +424,10 @@ L.Edit.PolyVerticesEdit = L.Handler.extend({
 			marker.off('dragend', onDragEnd, this);
 			marker.off('touchmove', onDragStart, this);
 
-			this._createMiddleMarker(marker1, marker);
-			this._createMiddleMarker(marker, marker2);
+			if(this.options.allowPolyline){
+				this._createMiddleMarker(marker1, marker);
+				this._createMiddleMarker(marker, marker2);
+			}
 		};
 
 		onClick = function () {

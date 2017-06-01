@@ -11,6 +11,7 @@ L.Draw.Polyline = L.Draw.Feature.extend({
 	Poly: L.Polyline,
 
 	options: {
+		allowPolyline: true,
 		allowIntersection: true,
 		repeatMode: false,
 		drawError: {
@@ -175,7 +176,11 @@ L.Draw.Polyline = L.Draw.Feature.extend({
 	// Add a vertex to the end of the polyline
 	addVertex: function (latlng) {
 		var markersLength = this._markers.length;
-		// markersLength must be greater than or equal to 2 before intersections can occur
+		// markersLength must be greater than or equal to 2 before intersections can occur		
+		if(markersLength > 2 && !this.options.allowPolyline){
+			this._showErrorTooltip();
+			return;
+		}
 		if (markersLength >= 2 && !this.options.allowIntersection && this._poly.newLatLngIntersects(latlng)) {
 			this._showErrorTooltip();
 			return;
